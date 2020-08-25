@@ -1,23 +1,25 @@
 package com.in28minutes.springboot.service;
 
-import com.in28minutes.springboot.model.Question;
-import com.in28minutes.springboot.model.Survey;
-import org.springframework.stereotype.Component;
-
+import java.math.BigInteger;
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.springframework.stereotype.Component;
+
+import com.in28minutes.springboot.model.Question;
+import com.in28minutes.springboot.model.Survey;
+
 @Component
 public class SurveyService {
     private static List<Survey> surveys = new ArrayList<>();
-
     static {
         Question question1 = new Question("Question1",
                 "Largest Country in the World", "Russia", Arrays.asList(
                 "India", "Russia", "United States", "China"));
         Question question2 = new Question("Question2",
-                "Most Populus Country in the World", "China", Arrays.asList(
+                "Most Populated Country in the World", "China", Arrays.asList(
                 "India", "Russia", "United States", "China"));
         Question question3 = new Question("Question3",
                 "Highest GDP in the World", "United States", Arrays.asList(
@@ -33,6 +35,10 @@ public class SurveyService {
                 "Description of the Survey", questions);
 
         surveys.add(survey);
+    }
+
+    public List<Survey> retrieveAllSurveys() {
+        return surveys;
     }
 
     public Survey retrieveSurvey(String surveyId) {
@@ -52,5 +58,38 @@ public class SurveyService {
         }
 
         return survey.getQuestions();
+    }
+
+    public Question retrieveQuestion(String surveyId, String questionId) {
+        Survey survey = retrieveSurvey(surveyId);
+
+        if (survey == null) {
+            return null;
+        }
+
+        for (Question question : survey.getQuestions()) {
+            if (question.getId().equals(questionId)) {
+                return question;
+            }
+        }
+
+        return null;
+    }
+
+    private SecureRandom random = new SecureRandom();
+
+    public Question addQuestion(String surveyId, Question question) {
+        Survey survey = retrieveSurvey(surveyId);
+
+        if (survey == null) {
+            return null;
+        }
+
+        String randomId = new BigInteger(130, random).toString(32);
+        question.setId(randomId);
+
+        survey.getQuestions().add(question);
+
+        return question;
     }
 }

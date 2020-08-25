@@ -26,6 +26,26 @@ public class Question {
         this.options = options;
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public String getCorrectAnswer() {
+        return correctAnswer;
+    }
+
+    public List<String> getOptions() {
+        return options;
+    }
+
     @Override
     public String toString() {
         return String
